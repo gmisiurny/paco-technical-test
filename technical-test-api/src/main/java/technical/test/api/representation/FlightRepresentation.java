@@ -7,6 +7,7 @@ import java.util.UUID;
 
 @Data
 public class FlightRepresentation {
+
     private UUID id;
     private LocalDateTime departure;
     private LocalDateTime arrival;
@@ -14,4 +15,5 @@ public class FlightRepresentation {
     private AirportRepresentation origin;
     private AirportRepresentation destination;
     private String image;
+
 }

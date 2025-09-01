@@ -9,8 +9,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 @Document(collection = "airport")
 public class AirportRecord {
+
     @Id
     private String iata;
     private String name;
     private String country;
+
 }

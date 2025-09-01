@@ -9,11 +9,12 @@ import technical.test.api.repository.AirportRepository;
 @Service
 @RequiredArgsConstructor
 public class AirportService {
+
     private final AirportRepository airportRepository;
 
     public Mono<AirportRecord> findByIataCode(final String iataCode) {
-        System.err.println("finding by iata code:"+iataCode);
-        return airportRepository.findAirportRecordByIata(iataCode);
+        System.err.println("finding by iata code:" + iataCode);
+        return this.airportRepository.findAirportRecordByIata(iataCode);
 //        return airportRepository.findById(iataCode);
     }
 }
