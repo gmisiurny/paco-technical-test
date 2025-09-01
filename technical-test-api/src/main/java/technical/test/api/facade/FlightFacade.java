@@ -1,6 +1,9 @@
 package technical.test.api.facade;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -22,20 +25,27 @@ public class FlightFacade {
     private final FlightMapper flightMapper;
     private final AirportMapper airportMapper;
 
-    public Flux<FlightRepresentation> getAllFlights() {
-        return this.flightService.getAllFlights()
-            .flatMap(flightRecord -> this.airportService.findByIataCode(flightRecord.getOrigin())
-                .zipWith(this.airportService.findByIataCode(flightRecord.getDestination()))
-                .flatMap(tuple -> {
-                    final AirportRecord origin = tuple.getT1();
-                    final AirportRecord destination = tuple.getT2();
-                    final FlightRepresentation flightRepresentation = this.flightMapper.convert(flightRecord);
-                    flightRepresentation.setOrigin(this.airportMapper.convert(origin));
-                    flightRepresentation.setDestination(this.airportMapper.convert(destination));
+    public Mono<Page<FlightRepresentation>> getAllFlights(final Pageable pageable) {
+        return this.flightService.getAllFlights(pageable)
+            .flatMap(page -> {
+                final Flux<FlightRepresentation> flightRepresentations = Flux.fromIterable(page.getContent())
+                    .flatMap(flightRecord -> this.airportService.findByIataCode(flightRecord.getOrigin())
+                        .zipWith(this.airportService.findByIataCode(flightRecord.getDestination()))
+                        .flatMap(tuple -> {
+                            final AirportRecord origin = tuple.getT1();
+                            final AirportRecord destination = tuple.getT2();
+                            final FlightRepresentation flightRepresentation = this.flightMapper.convert(flightRecord);
+                            flightRepresentation.setOrigin(this.airportMapper.convert(origin));
+                            flightRepresentation.setDestination(this.airportMapper.convert(destination));
 
-                    return Mono.just(flightRepresentation);
-                }));
+                            return Mono.just(flightRepresentation);
+                        }));
+
+                return flightRepresentations.collectList()
+                    .map(content -> new PageImpl<>(content, pageable, page.getTotalElements()));
+            });
     }
+
 
     public Mono<FlightRecord> saveFlight(final PostFlightRequest postFlightRequest) {
         return this.flightService.saveFlight(this.flightMapper.convert(postFlightRequest));
