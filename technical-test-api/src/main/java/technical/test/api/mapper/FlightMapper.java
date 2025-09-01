@@ -2,10 +2,8 @@ package technical.test.api.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 import technical.test.api.record.FlightRecord;
-import technical.test.api.representation.AirportRepresentation;
 import technical.test.api.representation.FlightRepresentation;
 import technical.test.api.representation.PostFlightRequest;
 
@@ -19,18 +17,9 @@ public interface FlightMapper {
     @Mapping(target = "destination", source = "destination", ignore = true)
     FlightRepresentation convert(final FlightRecord source);
 
-    @Mapping(target = "origin", source = "origin", qualifiedByName = "extractAirportCode")
-    @Mapping(target = "destination", source = "destination", qualifiedByName = "extractAirportCode")
-    FlightRecord convert(final FlightRepresentation source);
-
     @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID())")
     @Mapping(target = "origin", source = "originId")
     @Mapping(target = "destination", source = "destinationId")
     FlightRecord convert(final PostFlightRequest source);
-
-    @Named("extractAirportCode")
-    default String wrapImageAsList(final AirportRepresentation source) {
-        return source.getIata();
-    }
 
 }

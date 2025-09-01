@@ -17,6 +17,7 @@ import reactor.core.publisher.Mono;
 import technical.test.api.facade.FlightFacade;
 import technical.test.api.record.FlightRecord;
 import technical.test.api.representation.FlightRepresentation;
+import technical.test.api.representation.FlightUserInterfaceFilters;
 import technical.test.api.representation.PostFlightRequest;
 
 @RestController
@@ -24,15 +25,26 @@ import technical.test.api.representation.PostFlightRequest;
 @RequiredArgsConstructor
 public class FlightEndpoint {
 
-    private static final int DEFAULT_PAGE_SIZE = 6;
     protected static final String BASE_PATH = "/flight";
+    private static final String SEARCH_PATH = "/search";
+    private static final int DEFAULT_PAGE_SIZE = 6;
 
     private final FlightFacade flightFacade;
 
+
     @GetMapping
+    @ResponseStatus(HttpStatus.PARTIAL_CONTENT)
     public Mono<Page<FlightRepresentation>> getAllFlights(
         @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "origin", direction = Sort.Direction.DESC) final Pageable pageable) {
         return this.flightFacade.getAllFlights(pageable);
+    }
+
+    @PostMapping(SEARCH_PATH)
+    @ResponseStatus(HttpStatus.PARTIAL_CONTENT)
+    public Mono<Page<FlightRepresentation>> searchFlights(
+        @RequestBody final FlightUserInterfaceFilters filters,
+        @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "origin", direction = Sort.Direction.DESC) final Pageable pageable) {
+        return this.flightFacade.searchFlights(filters, pageable);
     }
 
     @PostMapping
