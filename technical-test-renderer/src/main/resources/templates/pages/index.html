@@ -66,6 +66,20 @@
             font-family: sans-serif;
             font-size: 0.8rem;
         }
+
+        .flight-image {
+            width: 100px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            transition: opacity 0.3s ease;
+            background-color: #f0f0f0;
+        }
+
+        .flight-image:not([src]) {
+            opacity: 0.5;
+        }
+
     </style>
 </head>
 <body>
@@ -78,6 +92,13 @@
     <h2>Bienvenue sur notre site de recherche de vols</h2>
     <p>Commencez votre aventure en trouvant les meilleurs vols disponibles.</p>
     <!-- Ajoutez ici le formulaire de recherche de vols ou d'autres éléments pertinents -->
+
+    <div style="margin-bottom: 20px;">
+        <a href="/create-flight" class="btn" style="background-color: #27ae60; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">
+            ➕ Créer un nouveau vol
+        </a>
+    </div>
+
     <ul>
         <table>
             <tr>
@@ -87,14 +108,22 @@
                 <th scope="col">Photo</th>
             </tr>
             <tr th:each="flight : ${flights}">
-                <th th:text="${flight ?: flight.origin.name}"></th>
-                <th th:text="${flight ?: flight.destination.name}"></th>
-                <th th:text="${flight ?: flight.price}"></th>
-                <th th:text="${flight ?: flight.photo}"></th>
+                <td th:text="${flight.origin.name}"></td>
+                <td th:text="${flight.destination.name}"></td>
+                <td th:text="${flight.price}"></td>
+                <td>
+                    <img th:src="${flight.image}"
+                         alt="Image du vol"
+                         class="flight-image"
+                         loading="lazy"
+                         decoding="async"/>
+                </td>
             </tr>
         </table>
     </ul>
 </section>
+
+
 
 <footer>
     <p>&copy; 2023 Recherche de Vols. Tous droits réservés.</p>

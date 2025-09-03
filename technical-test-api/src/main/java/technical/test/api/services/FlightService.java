@@ -21,11 +21,12 @@ public class FlightService {
 
 
     public Mono<Page<FlightRecord>> getAllFlights(final Pageable pageable) {
-        return this.flightRepository.findAllBy()
-            .skip(pageable.getOffset())
-            .take(pageable.getPageSize())
+        final Query query = new Query();
+        query.with(pageable);
+
+        return this.mongoTemplate.find(query, FlightRecord.class)
             .collectList()
-            .zipWith(this.flightRepository.count())
+            .zipWith(this.mongoTemplate.count(query, FlightRecord.class))
             .map(tuple -> new PageImpl<>(
                 tuple.getT1(),
                 pageable,

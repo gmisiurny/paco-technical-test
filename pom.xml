@@ -12,6 +12,7 @@
     <modules>
         <module>technical-test-api</module>
         <module>technical-test-renderer</module>
+        <module>technical-test-common</module>
     </modules>
 
     <parent>
@@ -27,6 +28,7 @@
         <reactor-test.version>3.4.25</reactor-test.version>
         <testcontainers-mongodb.version>1.18.3</testcontainers-mongodb.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <module.common.version>0.0.1-SNAPSHOT</module.common.version>
     </properties>
 
     <dependencyManagement>
@@ -67,6 +69,11 @@
 
     <!-- Dépendances communes à tous les modules -->
     <dependencies>
+        <dependency>
+            <groupId>fr.auchanretailfrance</groupId>
+            <artifactId>technical-test-common</artifactId>
+            <version>${module.common.version}</version>
+        </dependency>
         <!-- Common Spring Boot starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

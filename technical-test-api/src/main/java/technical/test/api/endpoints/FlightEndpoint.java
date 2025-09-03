@@ -15,10 +15,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import technical.test.api.facade.FlightFacade;
-import technical.test.api.record.FlightRecord;
 import technical.test.api.representation.FlightRepresentation;
 import technical.test.api.representation.FlightUserInterfaceFilters;
-import technical.test.api.representation.PostFlightRequest;
+import technical.test.common.request.PostFlightRequest;
 
 @RestController
 @RequestMapping(FlightEndpoint.BASE_PATH)
@@ -35,7 +34,7 @@ public class FlightEndpoint {
     @GetMapping
     @ResponseStatus(HttpStatus.PARTIAL_CONTENT)
     public Mono<Page<FlightRepresentation>> getAllFlights(
-        @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "origin", direction = Sort.Direction.DESC) final Pageable pageable) {
+        @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "price", direction = Sort.Direction.ASC) final Pageable pageable) {
         return this.flightFacade.getAllFlights(pageable);
     }
 
@@ -43,13 +42,13 @@ public class FlightEndpoint {
     @ResponseStatus(HttpStatus.PARTIAL_CONTENT)
     public Mono<Page<FlightRepresentation>> searchFlights(
         @RequestBody final FlightUserInterfaceFilters filters,
-        @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "origin", direction = Sort.Direction.DESC) final Pageable pageable) {
+        @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "price", direction = Sort.Direction.ASC) final Pageable pageable) {
         return this.flightFacade.searchFlights(filters, pageable);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<FlightRecord> saveFlight(@Valid @RequestBody final PostFlightRequest postFlightRequest) {
+    public Mono<FlightRepresentation> saveFlight(@Valid @RequestBody final PostFlightRequest postFlightRequest) {
         return this.flightFacade.saveFlight(postFlightRequest);
     }
 

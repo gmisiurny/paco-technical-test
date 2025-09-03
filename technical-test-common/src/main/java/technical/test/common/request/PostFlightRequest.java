@@ -1,4 +1,4 @@
-package technical.test.api.representation;
+package technical.test.common.request;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Future;

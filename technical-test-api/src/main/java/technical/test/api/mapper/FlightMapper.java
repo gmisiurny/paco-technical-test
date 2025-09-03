@@ -5,7 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import technical.test.api.record.FlightRecord;
 import technical.test.api.representation.FlightRepresentation;
-import technical.test.api.representation.PostFlightRequest;
+import technical.test.common.request.PostFlightRequest;
 
 import java.util.Collections;
 

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr" layout:decorate="~{decorators/master}"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer un Vol</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f7fc;
+            color: #333;
+        }
+
+        header {
+            background-color: #3498db;
+            padding: 20px;
+            text-align: center;
+            color: #fff;
+        }
+
+        section {
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="datetime-local"],
+        input[type="number"],
+        input[type="text"],
+        input[type="url"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .btn {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-secondary {
+            background-color: #95a5a6;
+        }
+
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+
+        footer {
+            background-color: #3498db;
+            padding: 10px 0;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Créer un Nouveau Vol</h1>
+</header>
+
+<section>
+    <form th:action="@{/create-flight}" th:object="${postFlightRequest}" method="post">
+
+        <div class="form-group">
+            <label for="departure">Date et heure de départ :</label>
+            <input type="datetime-local" id="departure" th:field="*{departure}" required>
+            <div class="error" th:if="${#fields.hasErrors('departure')}" th:errors="*{departure}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="arrival">Date et heure d'arrivée :</label>
+            <input type="datetime-local" id="arrival" th:field="*{arrival}" required>
+            <div class="error" th:if="${#fields.hasErrors('arrival')}" th:errors="*{arrival}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="price">Prix (€) :</label>
+            <input type="number" id="price" th:field="*{price}" step="0.01" min="0" required>
+            <div class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="originId">Code IATA d'origine (ex: CDG) :</label>
+            <input type="text" id="originId" th:field="*{originId}" maxlength="3" pattern="[A-Z]{3}" style="text-transform: uppercase;" required>
+            <div class="error" th:if="${#fields.hasErrors('originId')}" th:errors="*{originId}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="destinationId">Code IATA de destination (ex: JFK) :</label>
+            <input type="text" id="destinationId" th:field="*{destinationId}" maxlength="3" pattern="[A-Z]{3}" style="text-transform: uppercase;" required>
+            <div class="error" th:if="${#fields.hasErrors('destinationId')}" th:errors="*{destinationId}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="image">URL de l'image :</label>
+            <input type="url" id="image" th:field="*{image}" placeholder="https://example.com/image.jpg">
+            <div class="error" th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></div>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn">Créer le vol</button>
+            <a href="/" class="btn btn-secondary">Annuler</a>
+        </div>
+
+    </form>
+</section>
+
+<footer>
+    <p>&copy; 2023 Recherche de Vols. Tous droits réservés.</p>
+</footer>
+</body>
+</html>
