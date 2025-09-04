@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import technical.test.api.mapper.AirportMapper;
 import technical.test.api.mapper.FlightMapper;
@@ -35,6 +34,11 @@ public class FlightFacade {
             .flatMap(this::enrichFlightPageWithAirports);
     }
 
+    public Mono<FlightRepresentation> getFlightById(final String id) {
+        return this.flightService.getFlightById(id)
+            .flatMap(this::enrichFlightWithAirports);
+    }
+
     public Mono<Page<FlightRepresentation>> searchFlights(final FlightUserInterfaceFilters filters, final Pageable pageable) {
         return this.flightService.searchFlightsUsingFields(filters, pageable)
             .flatMap(this::enrichFlightPageWithAirports);
@@ -53,10 +57,7 @@ public class FlightFacade {
                 .map(tuple -> {
                     final AirportRecord origin = tuple.getT1();
                     final AirportRecord destination = tuple.getT2();
-                    final FlightRepresentation flightRepresentation = this.flightMapper.convert(flightRecord);
-                    flightRepresentation.setOrigin(this.airportMapper.convert(origin));
-                    flightRepresentation.setDestination(this.airportMapper.convert(destination));
-                    return flightRepresentation;
+                    return this.flightMapper.convert(flightRecord, origin, destination);
                 }))
             .collect(Collectors.toList());
 
@@ -72,11 +73,8 @@ public class FlightFacade {
             .map(tuple -> {
                 final AirportRecord origin = tuple.getT1();
                 final AirportRecord destination = tuple.getT2();
-                final FlightRepresentation flightRepresentation = this.flightMapper.convert(flightRecord);
-                flightRepresentation.setOrigin(this.airportMapper.convert(origin));
-                flightRepresentation.setDestination(this.airportMapper.convert(destination));
 
-                return flightRepresentation;
+                return this.flightMapper.convert(flightRecord, origin, destination);
             });
     }
 

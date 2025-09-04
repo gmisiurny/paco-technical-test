@@ -7,71 +7,162 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recherche de Vols</title>
     <style>
+        /* Variables CSS pour la cohérence */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #27ae60;
+            --accent-color: #007bff;
+            --success-color: #28a745;
+            --muted-color: #6c757d;
+            --background-color: #f0f7fc;
+            --card-background: #f8f9fa;
+            --border-color: #ced4da;
+            --table-border: rgb(190, 190, 190);
+            --table-header-bg: #696969;
+            --border-radius: 4px;
+            --padding-sm: 5px 10px;
+            --padding-md: 8px 12px;
+            --padding-lg: 10px 20px;
+            --max-content-width: 90%;
+            --max-pagination-width: 1000px;
+            --font-family: 'Arial', sans-serif;
+            --font-size-sm: 0.8rem;
+            --font-size-base: 0.9em;
+            --transition: all 0.3s ease;
+        }
+
+        /* Reset et base */
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f7fc;
+            font-family: var(--font-family);
+            background-color: var(--background-color);
             color: #333;
         }
 
-        header {
-            background-color: #3498db;
-            padding: 20px;
+        /* Layout principal */
+        header, footer {
+            background-color: var(--primary-color);
             text-align: center;
             color: #fff;
+        }
+
+        header {
+            padding: 20px;
+        }
+
+        footer {
+            padding: 10px 0;
+            width: 100%;
         }
 
         section {
             padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        footer {
-            background-color: #3498db;
-            padding: 10px 0;
-            bottom: 0;
+        /* Conteneurs */
+        .content-container {
             width: 100%;
-            text-align: center;
-            color: #fff;
+            max-width: var(--max-content-width);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        td,
-        th {
-            border: 1px solid rgb(190, 190, 190);
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .create-flight-container {
+            margin-bottom: 30px;
+        }
+
+        .table-container {
+            position: relative;
+            margin: 20px auto;
+            display: inline-block;
+        }
+
+        /* Boutons - styles de base */
+        .btn, .btn-pagination {
+            padding: var(--padding-md);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-block;
+        }
+
+        /* Boutons spécifiques */
+        .btn {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: var(--padding-lg);
+        }
+
+        .btn-pagination {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-pagination:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+
+        .btn-pagination:disabled {
+            background-color: var(--muted-color);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .current-page {
+            background-color: var(--success-color);
+            color: white;
+            padding: var(--padding-md);
+            border-radius: var(--border-radius);
+            font-weight: bold;
+        }
+
+        /* Table */
+        table {
+            border-collapse: collapse;
+            border: 2px solid rgb(200, 200, 200);
+            letter-spacing: 1px;
+            font-family: var(--font-family);
+            font-size: var(--font-size-sm);
+            margin: 0;
+        }
+
+        th, td {
+            border: 1px solid var(--table-border);
             padding: 10px;
+            text-align: center;
         }
 
-        td {
-            text-align: center;
+        th[scope='col'] {
+            background-color: var(--table-header-bg);
+            color: #fff;
         }
 
         tr:nth-child(even) {
             background-color: #eee;
         }
 
-        th[scope='col'] {
-            background-color: #696969;
-            color: #fff;
-        }
-
-        caption {
-            padding: 10px;
-            caption-side: bottom;
-        }
-
-        table {
-            border-collapse: collapse;
-            border: 2px solid rgb(200, 200, 200);
-            letter-spacing: 1px;
-            font-family: sans-serif;
-            font-size: 0.8rem;
-        }
-
         .flight-image {
             width: 100px;
             height: 60px;
             object-fit: cover;
-            border-radius: 4px;
+            border-radius: var(--border-radius);
             transition: opacity 0.3s ease;
             background-color: #f0f0f0;
         }
@@ -80,7 +171,148 @@
             opacity: 0.5;
         }
 
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px auto;
+            padding: 10px;
+            background-color: var(--card-background);
+            border-radius: 8px;
+            width: 100%;
+            max-width: var(--max-pagination-width);
+            gap: 20px;
+        }
+
+        .pagination-info {
+            color: var(--muted-color);
+            font-size: var(--font-size-base);
+        }
+
+        .pagination-info-bottom-right {
+            position: absolute;
+            bottom: -35px;
+            right: 0;
+            color: var(--muted-color);
+            font-size: var(--font-size-base);
+            font-style: italic;
+            background-color: var(--card-background);
+            padding: var(--padding-sm);
+            border-radius: var(--border-radius);
+            border: 1px solid #dee2e6;
+        }
+
+        .pagination-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .page-controls {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Contrôles de tri et sélecteurs */
+        .sort-controls, .page-size-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .sort-controls select, .page-size-selector select {
+            padding: var(--padding-sm);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background-color: white;
+        }
+
+        .table-section {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center; /* Centre la table */
+            margin: 10px 0;
+        }
+
+        .table-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Bouton flottant à droite */
+        .floating-create-button {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%); /* Centre verticalement */
+            z-index: 10;
+        }
+
+        .create-flight-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 15px 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: var(--transition);
+            white-space: nowrap;
+            border-radius: 6px;
+        }
+
+        .create-flight-btn:hover {
+            background-color: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn-select {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 6px 12px;
+            font-size: 0.85em;
+        }
+
+        .btn-select:hover {
+            background-color: #0056b3;
+        }
+
     </style>
+
+    <script defer>
+        function changePageSize(newSize) {
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('size', newSize);
+            urlParams.set('page', '0'); // Retourner à la première page
+            window.location.href = window.location.pathname + '?' + urlParams.toString();
+        }
+
+        function updateSort(sortBy, sortDir) {
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('sortBy', sortBy);
+            urlParams.set('sortDir', sortDir);
+            urlParams.set('page', '0'); // Retourner à la première page
+            window.location.href = window.location.pathname + '?' + urlParams.toString();
+        }
+
+        function handleSortByChange(selectElement) {
+            const sortBy = selectElement.value;
+            const sortDir = selectElement.getAttribute('data-current-sort-dir');
+            this.updateSort(sortBy, sortDir);
+        }
+
+        function handleSortDirChange(selectElement) {
+            const sortDir = selectElement.value;
+            const sortBy = selectElement.getAttribute('data-current-sort-by');
+            this.updateSort(sortBy, sortDir);
+        }
+    </script>
+
 </head>
 <body>
 <header>
@@ -88,42 +320,165 @@
 </header>
 
 <section>
-    <!-- Contenu de la recherche de vols -->
-    <h2>Bienvenue sur notre site de recherche de vols</h2>
-    <p>Commencez votre aventure en trouvant les meilleurs vols disponibles.</p>
-    <!-- Ajoutez ici le formulaire de recherche de vols ou d'autres éléments pertinents -->
+    <div class="content-container">
+        <!-- Contenu de la recherche de vols -->
+        <div class="welcome-section">
+            <h2>Bienvenue sur notre site de recherche de vols</h2>
+            <p>Commencez votre aventure en trouvant les meilleurs vols disponibles.</p>
+        </div>
+        <!-- Contrôles de pagination du haut -->
+        <div class="pagination-controls">
+            <div class="pagination-info">
+                <span th:text="'Affichage de ' + ((${currentPage} * ${size}) + 1) + ' à ' +
+                             (${isLast} ? ${totalElements} : (${currentPage} + 1) * ${size}) +
+                             ' sur ' + ${totalElements} + ' vols'">
+                    Affichage des résultats
+                </span>
+            </div>
 
-    <div style="margin-bottom: 20px;">
-        <a href="/create-flight" class="btn" style="background-color: #27ae60; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">
-            ➕ Créer un nouveau vol
-        </a>
+            <div class="pagination-buttons">
+                <!-- Contrôles de tri -->
+                <div class="sort-controls">
+                    <label for="sortBy">Trier par:</label>
+                    <select id="sortBy" name="sortBy"
+                            th:data-current-sort-dir="${sortDir}"
+                            onchange="handleSortByChange(this)">
+                        <option value="price" th:selected="${sortBy == 'price'}">Prix</option>
+                        <option value="origin" th:selected="${sortBy == 'origin'}">Départ</option>
+                        <option value="destination" th:selected="${sortBy == 'destination'}">Arrivée</option>
+                        <option value="departure" th:selected="${sortBy == 'departure'}">Date de départ</option>
+                        <option value="arrival" th:selected="${sortBy == 'arrival'}">Date de d'arrivée</option>
+                    </select>
+
+                    <select id="sortDir" name="sortDir"
+                            th:data-current-sort-by="${sortBy}"
+                            onchange="handleSortDirChange(this)">
+                        <option value="ASC" th:selected="${sortDir == 'ASC'}">Croissant</option>
+                        <option value="DESC" th:selected="${sortDir == 'DESC'}">Décroissant</option>
+                    </select>
+                </div>
+
+                <!-- Sélecteur de taille de page -->
+                <div class="page-size-selector">
+                    <label for="pageSize">Éléments par page:</label>
+                    <select id="pageSize" name="size" onchange="changePageSize(this.value)">
+                        <option value="5" th:selected="${size == 5}">5</option>
+                        <option value="10" th:selected="${size == 10}">10</option>
+                        <option value="20" th:selected="${size == 20}">20</option>
+                        <option value="50" th:selected="${size == 50}">50</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table des vols -->
+        <div class="table-section">
+            <div class="table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th scope="col">Départ de</th>
+                        <th scope="col">Date de départ</th>
+                        <th scope="col">Arrivée à</th>
+                        <th scope="col">Date d'arrivée</th>
+                        <th scope="col">Prix</th>
+                        <th scope="col">Photo</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="flight : ${flights.content}">
+                        <td th:text="${flight.origin.name}"></td>
+                        <td th:text="${#temporals.format(flight.departure, 'dd/MM/yyyy HH:mm')}"></td>
+                        <td th:text="${flight.destination.name}"></td>
+                        <td th:text="${#temporals.format(flight.arrival, 'dd/MM/yyyy HH:mm')}"></td>
+                        <td th:text="${flight.price} + ' €'"></td>
+                        <td>
+                            <img th:src="${flight.image}"
+                                 alt="Image du vol"
+                                 class="flight-image"
+                                 loading="lazy"
+                                 decoding="async"/>
+                        </td>
+                        <td>
+                            <a th:href="@{/flight-details/{id}(id=${flight.id}, page=${currentPage}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir})}"
+                               class="btn btn-select">
+                                ✈️ Sélectionner
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="pagination-info-bottom-right">
+                    <span th:text="'Page ' + (${currentPage} + 1) + ' sur ' + ${totalPages}">
+                        Navigation
+                    </span>
+                </div>
+            </div>
+
+            <div class="floating-create-button">
+                <a href="/create-flight" class="btn create-flight-btn">
+                    ➕ Créer un nouveau vol
+                </a>
+            </div>
+        </div>
+
+        <div class="pagination-controls">
+            <div class="page-controls">
+                <!-- Première page -->
+                <a th:href="@{/(page=0, size=${size}, sortBy=${sortBy}, sortDir=${sortDir})}"
+                   class="btn-pagination"
+                   th:classappend="${isFirst} ? 'disabled' : ''"
+                   th:if="${!isFirst}">
+                    ⏮️ Première
+                </a>
+                <button class="btn-pagination" disabled th:if="${isFirst}">⏮️ Première</button>
+
+                <!-- Page précédente -->
+                <a th:href="@{/(page=${currentPage - 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir})}"
+                   class="btn-pagination"
+                   th:classappend="${isFirst} ? 'disabled' : ''"
+                   th:if="${!isFirst}">
+                    ⬅️ Précédente
+                </a>
+                <button class="btn-pagination" disabled th:if="${isFirst}">⬅️ Précédente</button>
+
+                <!-- Pages centrales -->
+                <div th:each="pageNum : ${#numbers.sequence(
+                    T(java.lang.Math).max(0, currentPage - 2),
+                    T(java.lang.Math).min(totalPages - 1, currentPage + 2)
+                )}">
+                    <span th:if="${pageNum == currentPage}" class="current-page" th:text="${pageNum + 1}">Page courante</span>
+                    <a th:if="${pageNum != currentPage}"
+                       th:href="@{/(page=${pageNum}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir})}"
+                       class="btn-pagination"
+                       th:text="${pageNum + 1}">
+                        Page
+                    </a>
+                </div>
+
+                <!-- Page suivante -->
+                <a th:href="@{/(page=${currentPage + 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir})}"
+                   class="btn-pagination"
+                   th:classappend="${isLast} ? 'disabled' : ''"
+                   th:if="${!isLast}">
+                    Suivante ➡️
+                </a>
+                <button class="btn-pagination" disabled th:if="${isLast}">Suivante ➡️</button>
+
+                <!-- Dernière page -->
+                <a th:href="@{/(page=${totalPages - 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir})}"
+                   class="btn-pagination"
+                   th:classappend="${isLast} ? 'disabled' : ''"
+                   th:if="${!isLast}">
+                    Dernière ⏭️
+                </a>
+                <button class="btn-pagination" disabled th:if="${isLast}">Dernière ⏭️</button>
+            </div>
+        </div>
     </div>
-
-    <ul>
-        <table>
-            <tr>
-                <th scope="col">Départ de</th>
-                <th scope="col">Arrivée à</th>
-                <th scope="col">Prix</th>
-                <th scope="col">Photo</th>
-            </tr>
-            <tr th:each="flight : ${flights}">
-                <td th:text="${flight.origin.name}"></td>
-                <td th:text="${flight.destination.name}"></td>
-                <td th:text="${flight.price}"></td>
-                <td>
-                    <img th:src="${flight.image}"
-                         alt="Image du vol"
-                         class="flight-image"
-                         loading="lazy"
-                         decoding="async"/>
-                </td>
-            </tr>
-        </table>
-    </ul>
 </section>
-
-
 
 <footer>
     <p>&copy; 2023 Recherche de Vols. Tous droits réservés.</p>

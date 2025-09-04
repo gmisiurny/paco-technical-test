@@ -3,6 +3,7 @@ package technical.test.renderer.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import technical.test.common.request.PostFlightRequest;
@@ -16,9 +17,13 @@ public class FlightService {
 
     private final TechnicalApiClient technicalApiClient;
 
-    public Mono<Page<FlightViewModel>> getFlights() {
-        return this.technicalApiClient.getFlights()
+    public Mono<Page<FlightViewModel>> getFlights(final Pageable pageable) {
+        return this.technicalApiClient.getFlights(pageable)
             .map(PageResponse::toPage);
+    }
+
+    public Mono<FlightViewModel> getFlightById(final String id) {
+        return this.technicalApiClient.getFlightById(id);
     }
 
     public Mono<FlightViewModel> createFlight(final PostFlightRequest createFlightRequest) {

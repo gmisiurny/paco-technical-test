@@ -2,6 +2,7 @@ package technical.test.api.representation;
 
 import lombok.EqualsAndHashCode;
 import technical.test.api.repository.ISearchRequest;
+import technical.test.common.request.FlightFilters;
 
 import java.util.ArrayList;
 import java.util.List;

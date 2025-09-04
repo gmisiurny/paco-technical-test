@@ -1,4 +1,4 @@
-package technical.test.api.representation;
+package technical.test.common.request;
 
 import lombok.Builder;
 import lombok.Getter;

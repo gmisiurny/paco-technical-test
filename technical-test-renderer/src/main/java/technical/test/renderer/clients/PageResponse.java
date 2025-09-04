@@ -11,16 +11,17 @@ import java.util.List;
 public class PageResponse<T> {
 
     private List<T> content;
-    private int number; // Numéro de page dans la réponse Spring Data
-    private int size; // Taille de la page dans la réponse Spring Data
+    private int number;
+    private int size;
     private long totalElements;
     private int totalPages;
     private boolean first;
     private boolean last;
     private boolean empty;
     private int numberOfElements;
+    private Pageable pageable;
+    private Sort sort;
 
-    // Classe interne pour mapper l'objet pageable
     @Data
     public static class Pageable {
         private int pageNumber;
@@ -37,9 +38,6 @@ public class PageResponse<T> {
         private boolean sorted;
         private boolean unsorted;
     }
-
-    private Pageable pageable;
-    private Sort sort;
 
     public Page<T> toPage() {
         return new PageImpl<>(

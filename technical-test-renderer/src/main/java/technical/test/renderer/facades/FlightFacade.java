@@ -2,6 +2,7 @@ package technical.test.renderer.facades;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import technical.test.common.request.PostFlightRequest;
@@ -14,8 +15,12 @@ public class FlightFacade {
 
     private final FlightService flightService;
 
-    public Mono<Page<FlightViewModel>> getFlights() {
-        return this.flightService.getFlights();
+    public Mono<Page<FlightViewModel>> getFlights(final Pageable pageable) {
+        return this.flightService.getFlights(pageable);
+    }
+
+    public Mono<FlightViewModel> getFlightById(final String id) {
+        return this.flightService.getFlightById(id);
     }
 
     public Mono<FlightViewModel> createFlight(final PostFlightRequest createFlightRequest) {

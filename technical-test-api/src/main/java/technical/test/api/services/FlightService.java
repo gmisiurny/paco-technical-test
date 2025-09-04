@@ -12,6 +12,8 @@ import technical.test.api.record.FlightRecord;
 import technical.test.api.repository.FlightRepository;
 import technical.test.api.repository.ISearchRequest;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class FlightService {
@@ -26,12 +28,16 @@ public class FlightService {
 
         return this.mongoTemplate.find(query, FlightRecord.class)
             .collectList()
-            .zipWith(this.mongoTemplate.count(query, FlightRecord.class))
+            .zipWith(this.mongoTemplate.count(new Query(), FlightRecord.class))
             .map(tuple -> new PageImpl<>(
                 tuple.getT1(),
                 pageable,
                 tuple.getT2()
             ));
+    }
+
+    public Mono<FlightRecord> getFlightById(final String id) {
+        return this.flightRepository.findById(UUID.fromString(id));
     }
 
     public Mono<Page<FlightRecord>> searchFlightsUsingFields(final ISearchRequest searchRequest, final Pageable pageable) {

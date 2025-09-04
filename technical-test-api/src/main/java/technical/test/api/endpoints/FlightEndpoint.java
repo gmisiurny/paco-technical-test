@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +37,12 @@ public class FlightEndpoint {
     public Mono<Page<FlightRepresentation>> getAllFlights(
         @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "price", direction = Sort.Direction.ASC) final Pageable pageable) {
         return this.flightFacade.getAllFlights(pageable);
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Mono<FlightRepresentation> getFlightById(@PathVariable final String id) {
+        return this.flightFacade.getFlightById(id);
     }
 
     @PostMapping(SEARCH_PATH)
