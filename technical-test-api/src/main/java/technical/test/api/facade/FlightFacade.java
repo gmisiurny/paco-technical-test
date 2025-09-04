@@ -17,6 +17,10 @@ import technical.test.api.services.AirportService;
 import technical.test.api.services.FlightService;
 import technical.test.common.request.PostFlightRequest;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 @RequiredArgsConstructor
 public class FlightFacade {
@@ -42,20 +46,23 @@ public class FlightFacade {
     }
 
     private Mono<Page<FlightRepresentation>> enrichFlightPageWithAirports(Page<FlightRecord> page) {
-        final Flux<FlightRepresentation> flightRepresentations = Flux.fromIterable(page.getContent())
-            .flatMap(flightRecord -> this.airportService.findByIataCode(flightRecord.getOrigin())
+        final List<FlightRecord> flights = page.getContent();
+        final List<Mono<FlightRepresentation>> flightMonos = flights.stream()
+            .map(flightRecord -> this.airportService.findByIataCode(flightRecord.getOrigin())
                 .zipWith(this.airportService.findByIataCode(flightRecord.getDestination()))
-                .flatMap(tuple -> {
+                .map(tuple -> {
                     final AirportRecord origin = tuple.getT1();
                     final AirportRecord destination = tuple.getT2();
                     final FlightRepresentation flightRepresentation = this.flightMapper.convert(flightRecord);
                     flightRepresentation.setOrigin(this.airportMapper.convert(origin));
                     flightRepresentation.setDestination(this.airportMapper.convert(destination));
+                    return flightRepresentation;
+                }))
+            .collect(Collectors.toList());
 
-                    return Mono.just(flightRepresentation);
-                }));
-
-        return flightRepresentations.collectList()
+        return Mono.zip(flightMonos, objects -> Arrays.stream(objects)
+                .map(FlightRepresentation.class::cast)
+                .collect(Collectors.toList()))
             .map(content -> new PageImpl<>(content, page.getPageable(), page.getTotalElements()));
     }
 
@@ -72,6 +79,5 @@ public class FlightFacade {
                 return flightRepresentation;
             });
     }
-
 
 }

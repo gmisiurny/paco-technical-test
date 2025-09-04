@@ -26,7 +26,7 @@ public class FlightEndpoint {
 
     protected static final String BASE_PATH = "/flight";
     private static final String SEARCH_PATH = "/search";
-    private static final int DEFAULT_PAGE_SIZE = 6;
+    private static final int DEFAULT_PAGE_SIZE = 2000;
 
     private final FlightFacade flightFacade;
 

@@ -33,6 +33,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>fr.auchanretailfrance</groupId>
+                <artifactId>technical-test-common</artifactId>
+                <version>${module.common.version}</version>
+            </dependency>
             <!-- Lombok dependencies -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
@@ -69,11 +74,6 @@
 
     <!-- Dépendances communes à tous les modules -->
     <dependencies>
-        <dependency>
-            <groupId>fr.auchanretailfrance</groupId>
-            <artifactId>technical-test-common</artifactId>
-            <version>${module.common.version}</version>
-        </dependency>
         <!-- Common Spring Boot starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -15,6 +15,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>fr.auchanretailfrance</groupId>
+            <artifactId>technical-test-common</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
