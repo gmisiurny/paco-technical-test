@@ -48,7 +48,7 @@ public class FlightEndpoint {
     @PostMapping(SEARCH_PATH)
     @ResponseStatus(HttpStatus.PARTIAL_CONTENT)
     public Mono<Page<FlightRepresentation>> searchFlights(
-        @RequestBody final FlightUserInterfaceFilters filters,
+        @RequestBody(required = false) final FlightUserInterfaceFilters filters,
         @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "price", direction = Sort.Direction.ASC) final Pageable pageable) {
         return this.flightFacade.searchFlights(filters, pageable);
     }

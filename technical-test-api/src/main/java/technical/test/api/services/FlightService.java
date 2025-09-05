@@ -12,6 +12,7 @@ import technical.test.api.record.FlightRecord;
 import technical.test.api.repository.FlightRepository;
 import technical.test.api.repository.ISearchRequest;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -41,6 +42,10 @@ public class FlightService {
     }
 
     public Mono<Page<FlightRecord>> searchFlightsUsingFields(final ISearchRequest searchRequest, final Pageable pageable) {
+        if (Objects.isNull(searchRequest)) {
+            return this.getAllFlights(pageable);
+        }
+
         final Query query = new Query(searchRequest.toCriteria());
         query.with(pageable);
 

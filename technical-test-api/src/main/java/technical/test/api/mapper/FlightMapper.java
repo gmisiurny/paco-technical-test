@@ -11,7 +11,12 @@ import technical.test.common.request.PostFlightRequest;
 import java.util.Collections;
 
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, imports = Collections.class)
+@Mapper(
+    componentModel = "spring",
+    unmappedTargetPolicy = ReportingPolicy.IGNORE,
+    imports = Collections.class,
+    uses = {AirportMapper.class}
+)
 public interface FlightMapper {
 
     @Mapping(target = "id", source = "source.id")
